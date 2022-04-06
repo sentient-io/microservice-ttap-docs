@@ -1,0 +1,39 @@
+# This yaml file been updated for Sentient.io API Documentation v4.0.0 Beta
+# Latest update : 2021-Feb-4
+# For adding new microservices, please follow the format below:
+
+#-------------------------------------------------
+#
+# /// - microservice category have to be lower case,
+# ///the category name will be exactely same as the folder name
+# Category (voice / computer vision / nlp / etc.):
+#       /// - microservice SHOULD be same as the file name, except, don't need the version number
+#       microservice_name:
+#           /// - This will be the title appeared in the side navigation
+#           /// - Use the same title from info.title inside the microservice yaml file
+#           title: "Some Title"
+#           /// - Versions will contain version number and file name for each version
+#            versions:
+#               v1.0: "yaml_file_name_goes_here_v1.0.yaml"
+#               0.1.0: "yaml_file_name_goes_here_0.1.0.yaml"
+#
+#-------------------------------------------------
+
+# For Sentient.io API documentation maintenance:
+# There is a yamlPath variable contains the path of where the yaml file is stored
+# The final yaml link will be a combination of {{yamlPath + / + category + / + verions['v1.0']}}
+      
+nlp:       
+  sentiment_analysis_and_sarcasm_detection:
+    title: Sentiment Analysis and Sarcasm Detection
+    versions:
+      0.1.1: 'sentiment_analysis_and_sarcasm_detection.yaml'
+data analytics:
+  recommendation_engine:
+    title: Recommendation Engine
+    versions:
+      0.1.0: 'recommendation_engine.yaml'
+  rule_engine:
+    title: Rule Engine
+    versions:
+      0.1.0: 'rule_engine.yaml'
