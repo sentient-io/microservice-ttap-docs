@@ -7,7 +7,7 @@ info:
   x-additionalinfo: |+
     - This microservice consists of set of REST APIs to inject data, train data, get recommendations etc. User can also use bulk upload APIs to insert historial data using CSV for both events and items.Dedicated engines are created per primary indicator, after the engine creation the apis can be used to inject the data.
     
-    - Tryitout by clicking the link here https://editor.swagger.io/?url=https://storage.googleapis.com/data_analytics_docs/recommendation_engine.yaml
+    - Tryitout by clicking the link here https://editor.swagger.io/?url=https://storage.googleapis.com/analytics_docs/recommendation_engine.yaml
   x-subscribelink: recommendation_engine
   x-apitype: Subscription
   x-apitypedescription: |+
@@ -99,6 +99,43 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/readditeminput'
+        required: true
+  /microservices/analytics/recommendationengine/v0/deleteitem:
+    description: |+
+        This API is used to delete the event from recommendation engine
+    post:
+      tags:
+        - v0.1.0
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/redeleteitemsuccess'
+              example: 
+                message: Successfully Deleted
+                status: Success
+        '419':
+          description: Input Field Missing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inputfieldmissing'
+      
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/servererror'
+      security:
+        - APIAuthorizer: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/redeleteiteminput'
         required: true
   /microservices/analytics/recommendationengine/v0/deleteevent:
     description: |+
@@ -279,7 +316,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/rebulkuploadeventsuccess'
               example: 
-                message: Partially Added
+                message: Successfully Added
                 status: Success
                 error_rows: []
         '419':
@@ -317,7 +354,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/rebulkuploaditemsuccess'
               example: 
-                message: Partially Added
+                message: Successfully Added
                 status: Success
                 error_rows: []
         '419':
@@ -439,71 +476,71 @@ components:
             properties:
               ID:
                 type: string
-                description: The result of the API call.
-                example: bdcd1f86-b65c-11ec-9705-5ee8....
+                description: Unique id for the list
+                example: bdcd1f86-b65c-11ec-97.....
               EXTERNAL_ID:
                 type: string
-                description: The result of the API call.
+                description: External ID
                 example: "Page 1"
               ENTITY_TYPE:
                 type: string
-                description: The result of the API call.
-                example: pagename
+                description: Entity type
+                example: entitytype name
               ENTITY_DETAILS:
                 type: string
-                description: The result of the API call.
+                description: Entity details
                 example: null
               INPUT:
                 type: string
-                description: The result of the API call.
-                example: {\"engineId\": \"ttap-om-page\", \"item\": \"Page 1\", \"itemBias\": \"\", \"from\": \"\", \"num\": \"\", \"rules\": [], \"dateRange\": {}, \"blacklistItems\": [], \"returnSelf\": false}
+                description: Input details
+                example: {\"engineId\": \"sentientengine\", \"item\": \"Page 1\", \"itemBias\": \"\", \"from\": \"\", \"num\": \"\", \"rules\": [], \"dateRange\": {}, \"blacklistItems\": [], \"returnSelf\": false}
               RE_TYPE:
                 type: string
-                description: The result of the API call.
+                description: Re type
                 example: ML
               OPTIONS:
                 type: string
-                description: The result of the API call.
+                description: Options
                 example: 11
               SELECTED:
                 type: string
-                description: The result of the API call.
+                description: Selected
                 example: false
               CREATED_DATE_TIME:
                 type: string
-                description: The result of the API call.
+                description: created date time
                 example: 2022-04-07T18:23:17
               owner_id:
                 type: string
-                description: The result of the API call.
-                example: 1821
+                description: Owner id
+                example: 1
               owner_name:
                 type: string
-                description: The result of the API call.
-                example: TTAP
+                description: Owner name
+                example: ownername
               org_id:
                 type: string
-                description: The result of the API call.
-                example: 1821
+                description: org id
+                example: org id
               org_name:
                 type: string
-                description: The result of the API call.
-                example: TTAP
+                description: org name
+                example: org name
               user_id:
                 type: string
-                description: The result of the API call.
-                example: 2601
+                description: user id
+                example: 12
               user_name:
                 type: string
-                description: The result of the API call.
-                example: ttap_admin
+                description: user name
+                example: username
               api_key:
                 type: string
-                description: The result of the API call.
+                description: Api key
                 example: A2FAAE0499E7...
               updated_date_time:
                 type: string
-                description: The result of the API call.
+                description: updated date time
                 example: null
     readdeventsuccess:
       type: object
@@ -538,6 +575,17 @@ components:
           type: string
           description: The status of the API call.
           example: Success
+    redeleteitemsuccess:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message of the API call.
+          example: Successfully Deleted
+        status:
+          type: string
+          description: The status of the API call.
+          example: Success
     redeleteeventsuccess:
       type: object
       properties:
@@ -555,7 +603,7 @@ components:
         message:
           type: string
           description: The message of the API call.
-          example: Partially Added
+          example: Successfully Added
         status:
           type: string
           description: The status of the API call.
@@ -570,7 +618,7 @@ components:
         message:
           type: string
           description: The message of the API call.
-          example: Partially Added
+          example: Successfully Added
         status:
           type: string
           description: The status of the API call.
@@ -731,7 +779,9 @@ components:
           format: binary
           default: true
           example: sample.csv
-          description: Maximum file size up to 10 MB.
+          description: |+ 
+            Maximum file size up to 10 MB.
+            csv file format should contains the specified column name - user, item and event_time
         engine_name:
           type: string
           default: true
@@ -756,7 +806,9 @@ components:
           format: binary
           default: true
           example: sample.wav
-          description: Maximum file size up to 10 MB.
+          description: |+
+            Maximum file size up to 10 MB.
+            csv file format should contains the specified column name - Properties of the field name,and event_time
         engine_name:
           type: string
           default: true
@@ -798,6 +850,7 @@ components:
       type: object
       required:
         - engine_name
+        - item
       properties:
         engine_name:
           type: string
@@ -808,10 +861,11 @@ components:
         item:
           type: string
           example: Book1
+          default: true
           description: |+
-            Optional. It contains the unique item identifier
+            The id for items that correspond to the indicator name. May be a product-id, category-id, a tag-id, search term, location, anything that the event represents.
         item_bias:
-          type: string
+          type: number
           example: -1
           description: |+
             Optional. This tells the recommender to return items similar to this the item specified.
@@ -822,15 +876,15 @@ components:
           type: number
           example: 0
           description: |+
-            Rank/position to start returning recommendations from
+             Optional. Rank/position to start returning recommendations from
         limit:
           type: number
           example: 4
           description: |+
-            Max number of recommendations to return
+             Optional. Max number of recommendations to return
         rules:
           type: array
-          description: Array of field values and biases to use in this query.
+          description:  Optional. Array of field values and biases to use in this query.
           items:
             oneOf:
               - type: object 
@@ -850,28 +904,11 @@ components:
                       bias = 0: Exclude recommended items that match the rest of the Rule
                       bias > 0: Boost recommended items that match the rest of the Rule by the bias value.
                     example: -1
-        date_range:
-          type: object
-          description: |+
-            Values for the before and after are strings in ISO 8601 format.
-          properties:
-              name:
-                type: string
-                description: The "name" identifies the property name to match.
-                example: eventTime
-              before:
-                type: string
-                description: The date range from 
-                example: 2015-09-15T11:28:45.114-07:00
-              after:
-                type: string
-                description: The date range to
-                example: 2015-08-15T11:28:45.114-07:00
         blacklist_items:
           type: array
           example: ["itemId1", "itemId2"]
           description: |+
-             It specifies event types this part of the query specifies individual items to remove from returned recommendations.
+              Optional. It specifies event types this part of the query specifies individual items to remove from returned recommendations.
           items:
             oneOf:
               - type: object
@@ -879,11 +916,12 @@ components:
           type: string
           example: false
           description: |+
-            Its boolean asking to include the item that was part of the query as part of the results. Defaults to false.
+             Optional. Its boolean asking to include the item that was part of the query as part of the results. Defaults to false.
     reuserinput:
       type: object
       required:
         - engine_name
+        - user
       properties:
         engine_name:
           type: string
@@ -894,6 +932,7 @@ components:
         user:
           type: string
           example: User 10
+          default: true
           description: |+
             This is whatever string you use to identify a user.
         user_bias:
@@ -908,15 +947,15 @@ components:
           type: number
           example: 0
           description: |+
-            Rank/position to start returning recommendations from
+            Optional. Rank/position to start returning recommendations from
         limit:
           type: number
           example: 4
           description: |+
-            Max number of recommendations to return
+             Optional.Max number of recommendations to return
         rules:
           type: array
-          description: Array of fields values and biases to use in this query.
+          description:  Optional.Array of fields values and biases to use in this query.
           items:
             type: object
             properties:
@@ -935,28 +974,11 @@ components:
                   bias = 0: Exclude recommended items that match the rest of the Rule
                   bias > 0: Boost recommended items that match the rest of the Rule by the bias value.
                 example: -1
-        date_range:
-          type: object
-          description: |+
-            Values for the before and after are strings in ISO 8601 format.
-          properties:
-              name:
-                type: string
-                description: The "name" identifies the property name to match.
-                example: eventTime
-              before:
-                type: string
-                description: The date range from 
-                example: 2015-09-15T11:28:45.114-07:00
-              after:
-                type: string
-                description: The date range to
-                example: 2015-08-15T11:28:45.114-07:00
         blacklist_items:
           type: array
           example: ["itemId1", "itemId2"]
           description: |+
-             It specifies event types this part of the query specifies individual items to remove from returned recommendations.
+              Optional. It specifies event types this part of the query specifies individual items to remove from returned recommendations.
           items:
             oneOf:
               - type: object
@@ -964,8 +986,8 @@ components:
           type: string
           example: false
           description: |+
-            Its boolean asking to include the item that was part of the query as part of the results. Defaults to false.
-    redeleteeventinput:
+             Optional. Its boolean asking to include the item that was part of the query as part of the results. Defaults to false.
+    redeleteiteminput:
       type: object
       required:
         - engine_name
@@ -984,6 +1006,31 @@ components:
           example: Page 15
           description: |+
             The id for items that correspond to the indicator name. May be a product-id, category-id, a tag-id, search term, location, anything that the event represents.
+        event_time:
+          type: string
+          default: true
+          example: "2022-01-19T21:02:49.228Z"
+          description: |+
+            The ISO8601 formatted string for the time the event occurred.
+    redeleteeventinput:
+      type: object
+      required:
+        - engine_name
+        - user
+        - event_time
+      properties:
+        engine_name:
+          type: string
+          default: true
+          description: |+ 
+             Recommendation engine name
+          example: sentient engine
+        user:
+          type: string
+          default: true
+          example: User 15
+          description: |+
+            This is whatever string you use to identify a user.
         event_time:
           type: string
           default: true
@@ -1011,6 +1058,7 @@ components:
             The id for items that correspond to the indicator name. May be a product-id, category-id, a tag-id, search term, location, anything that the event represents.
         properties:
           type: object
+          description: You can define your items by providing additional properties
           properties:
             pagetitle:
               type: string
@@ -1021,20 +1069,30 @@ components:
         event_time:
           type: string
           default: true
-          example: "2022-01-19T21:02:49.228Z"
+          example: "2022-01-19T21:02:49.228Z" 
           description: |+
             The ISO8601 formatted string for the time the event occurred.
     getanalyticsinput:
       type: object
-      required:
-        - owner_id
       properties:
-        owner_id:
-          type: number
+        engine_name:
+          type: string
           default: true
           description: |+ 
-             Owner id to get the analytics
-          example: 1281
+             Recommendation engine name
+          example: sentient engine
+        offset:
+          type: number
+          default: false
+          description: |+ 
+             Default 0. The offset of the record list ie the starting index
+          example: 0
+        limit:
+          type: number
+          default: false
+          description: |+ 
+             The max records to return for the request. Default - 5000
+          example: 10
     readdeventinput:
       type: object
       required:

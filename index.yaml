@@ -28,7 +28,7 @@ nlp:
     title: Sentiment Analysis and Sarcasm Detection
     versions:
       0.1.1: 'sentiment_analysis_and_sarcasm_detection.yaml'
-data analytics:
+analytics:
   recommendation_engine:
     title: Recommendation Engine
     versions:

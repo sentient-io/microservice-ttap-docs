@@ -2,11 +2,9 @@ openapi: 3.0.1
 info:
   title: Rule Engine
   description: |+
-    It is an expert-system program, which runs the rules on the data and if any condition matches then it executes the corresponding actions. The inference engine is the component of the intelligent system in artificial intelligence, which applies logical rules to the knowledge base to infer new information from known facts. Inference-Engine’s program works in three phases to execute the rule on given data: Match, Resolve and Execute. 
+    This Analytics microservice is part of a business rule management system which executes a set of rules or condition in a runtime production environment. Such rules are used to process data and if any condition matches then it executes the corresponding actions. 
+    This microservice only provides the inference (processing objects based on predefined rules), while the creation of the projects and objects and definition of rules is handled by a separate user-interface.
   version: '0.1.0'
-  x-additionalinfo: |+
-
-    - Tryitout by clicking the link here https://editor.swagger.io/?url=https://storage.googleapis.com/data_analytics_docs/rule_engine.yaml
   x-subscribelink: rule_engine
   x-apitype: Subscription
   x-apitypedescription: |+
@@ -25,7 +23,7 @@ tags:
 - name: "v0.1.0"
   description: "Published Date - Oct 30, 2020"
 paths:
-  /microservices/dataanalytics/ruleengine/v0/getresults:
+  /microservices/analytics/ruleengine/v0/getresults:
     post:
       tags:
         - v0.1.0
@@ -158,6 +156,11 @@ components:
           description: |+ 
              Default value false.First prompt of getting suggestion value will be true/false
           example: false
+        external_id:
+          type: string
+          description: |+ 
+             External Identifier
+          example: user2
   securitySchemes:
     APIAuthorizer:
       type: apiKey
@@ -165,4 +168,3 @@ components:
       in: header
       x-amazon-apigateway-authtype: custom
       description: Authentication is done using the x-api-key in the request header
-         
